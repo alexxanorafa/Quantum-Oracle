@@ -210,7 +210,7 @@ function revelarCarta(slot) {
     const log = document.getElementById("cartas-meanings");
     const entry = document.createElement("p");
     entry.className = "log-line";
-    entry.innerHTML = `>> <strong>${deus.nome}</strong> detectado: "${deus.mensagem.substring(0, 50)}..."`;
+    entry.innerHTML = `>> <strong>${deus.nome}</strong> detectado: "${deus.mensagem}"`;
     log.appendChild(entry);
     log.scrollTop = log.scrollHeight; // Auto-scroll para baixo
 
@@ -228,4 +228,5 @@ function gerarSintese() {
     log.innerHTML += `<br><p class="log-line" style="color:var(--neon-gold)">>> COMPUTANDO SÍNTESE FINAL...</p>`;
     log.innerHTML += `<p class="log-line">>> A tríade sugere um momento de transformação. O equilíbrio entre o caos e a ordem foi estabelecido. Caminhe com a certeza da sua intuição.</p>`;
     log.scrollTop = log.scrollHeight;
+
 }
