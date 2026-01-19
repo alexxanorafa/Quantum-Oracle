@@ -1,0 +1,256 @@
+:root {
+    --gold: #d4b192;
+    --dark-blue: #2c3e50;
+    --deep-space: #0b1015;
+    --glass-bg: rgba(20, 30, 40, 0.7);
+    --glass-border: rgba(212, 177, 146, 0.3);
+    --neon-glow: rgba(212, 177, 146, 0.5);
+    --border-radius: 8px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: radial-gradient(circle at center, #1b2735 0%, #050505 100%);
+    color: var(--gold);
+    font-family: 'Inter', sans-serif;
+    height: 100vh; /* Altura total da Viewport */
+    width: 100vw;
+    overflow: hidden; /* IMPORTANTE: Remove Scroll Global */
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= HEADER & MENU (Mantido) ================= */
+header {
+    height: 60px;
+    background: rgba(11, 16, 21, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+    flex-shrink: 0; /* Impede que o header encolha */
+}
+
+.logo-area {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 0.9rem;
+    color: var(--gold);
+    opacity: 0.8;
+}
+
+/* Menu Burger Styles (Originais) */
+.menu-icon {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 22px;
+    z-index: 1001;
+}
+.menu-icon span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+    transition: 0.3s;
+}
+.menu-icon.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
+.menu-icon.active span:nth-child(2) { opacity: 0; }
+.menu-icon.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+
+.menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    width: 300px;
+    height: calc(100vh - 60px); /* Ocupa resto da tela */
+    background: rgba(11, 16, 21, 0.95);
+    backdrop-filter: blur(15px);
+    border-left: 1px solid var(--glass-border);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block; /* Override do original display:none */
+}
+.menu.active { transform: translateX(0); }
+
+.menu ul {
+    list-style: none;
+    padding: 20px;
+    overflow-y: auto;
+    height: 100%;
+}
+.menu-item {
+    display: block;
+    padding: 15px;
+    color: var(--gold);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+.menu-item:hover { background: rgba(212, 177, 146, 0.1); padding-left: 20px; }
+
+/* ================= MAIN LAYOUT ================= */
+main {
+    flex: 1; /* Ocupa todo o espaço restante */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* 1. Painel de Controle */
+.control-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--glass-bg);
+    padding: 10px 20px;
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+    margin-bottom: 10px;
+}
+.selector-group { display: flex; flex-direction: column; }
+.selector-group label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 2px;}
+
+select {
+    background: transparent;
+    border: none;
+    color: var(--gold);
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    outline: none;
+    cursor: pointer;
+}
+.btn-reset {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    transition: 0.3s;
+}
+.btn-reset:hover { background: var(--gold); color: var(--dark-blue); }
+
+/* 2. Campo Quântico (Cartas) */
+.quantum-field {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    perspective: 1000px;
+    padding: 20px 0;
+}
+
+.carta {
+    width: 130px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    backdrop-filter: blur(4px);
+}
+
+/* Estado Inicial: Pulsação */
+.carta:not(.revelada) {
+    animation: pulseBorder 3s infinite;
+}
+.carta:not(.revelada):hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+    box-shadow: 0 0 15px var(--neon-glow);
+}
+.carta-simbolo { font-size: 2rem; opacity: 0.5; transition: 0.3s; }
+.carta:hover .carta-simbolo { opacity: 1; text-shadow: 0 0 10px var(--gold); }
+
+/* Estado Revelado */
+.carta.revelada {
+    background: linear-gradient(135deg, var(--dark-blue), #1a252f);
+    border: 1px solid var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: rotateY(0);
+    cursor: default;
+}
+.carta.revelada h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--gold);
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* 3. HUD de Dados */
+.data-hud {
+    height: 35vh; /* Ocupa 35% da altura da tela */
+    background: rgba(15, 20, 25, 0.9);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.hud-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    background: rgba(0,0,0,0.2);
+}
+.status-blink { color: #00ff88; animation: blink 2s infinite; }
+.hud-content {
+    padding: 20px;
+    overflow-y: auto; /* Scroll apenas aqui dentro */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+.hud-content::-webkit-scrollbar { width: 4px; }
+.hud-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+
+/* Animações */
+@keyframes blink { 50% { opacity: 0.3; } }
+@keyframes pulseBorder { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: rgba(212, 177, 146, 0.4); } }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.msg-entry {
+    animation: fadeIn 0.6s ease forwards;
+    margin-bottom: 20px;
+    border-left: 2px solid var(--gold);
+    padding-left: 15px;
+}
+.msg-title { color: var(--gold); font-family: 'Cinzel', serif; font-size: 1.1rem; display: block; margin-bottom: 5px; }
+
+/* Responsivo Mobile */
+@media (max-width: 600px) {
+    .cartas-container { gap: 10px; }
+    .carta { width: 30%; height: 160px; }
+    .data-hud { height: 40vh; }
+    .control-panel { flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+}
