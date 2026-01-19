@@ -1,256 +1,247 @@
 :root {
-    --gold: #d4b192;
-    --dark-blue: #2c3e50;
-    --deep-space: #0b1015;
-    --glass-bg: rgba(20, 30, 40, 0.7);
-    --glass-border: rgba(212, 177, 146, 0.3);
-    --neon-glow: rgba(212, 177, 146, 0.5);
-    --border-radius: 8px;
+    --neon-blue: #00f3ff;
+    --neon-purple: #bc13fe;
+    --neon-gold: #ffd700;
+    --bg-dark: #050505;
+    --glass: rgba(10, 20, 30, 0.65);
+    --border: rgba(0, 243, 255, 0.2);
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; user-select: none; }
 
 body {
-    background: radial-gradient(circle at center, #1b2735 0%, #050505 100%);
-    color: var(--gold);
-    font-family: 'Inter', sans-serif;
-    height: 100vh; /* Altura total da Viewport */
+    margin: 0;
+    height: 100vh;
     width: 100vw;
-    overflow: hidden; /* IMPORTANTE: Remove Scroll Global */
+    overflow: hidden;
+    background-color: var(--bg-dark);
+    font-family: 'Rajdhani', sans-serif;
+    color: white;
     display: flex;
     flex-direction: column;
 }
 
-/* ================= HEADER & MENU (Mantido) ================= */
+/* Fundo de Partículas */
+#particles-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    opacity: 0.4;
+}
+
+/* Efeito Scanline (TV antiga/Holograma) */
+.scan-line {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 5px;
+    background: rgba(0, 243, 255, 0.1);
+    opacity: 0.4;
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* ============ HEADER ============ */
 header {
-    height: 60px;
-    background: rgba(11, 16, 21, 0.8);
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(0,0,0,0.8);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--glass-border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    z-index: 1000;
-    flex-shrink: 0; /* Impede que o header encolha */
+    z-index: 100;
 }
 
-.logo-area {
-    font-family: 'Cinzel', serif;
-    font-weight: 700;
-    letter-spacing: 2px;
-    font-size: 0.9rem;
-    color: var(--gold);
-    opacity: 0.8;
-}
+.logo-area { font-family: 'Orbitron', sans-serif; letter-spacing: 2px; }
+.glitch { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
+.version { font-size: 0.6em; color: #555; margin-left: 10px; }
 
-/* Menu Burger Styles (Originais) */
-.menu-icon {
+/* Menu Burger Estilizado */
+.menu-trigger {
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 22px;
-    z-index: 1001;
+    width: 40px; height: 30px;
+    display: flex; flex-direction: column; justify-content: space-between;
 }
-.menu-icon span {
-    display: block;
-    width: 100%;
-    height: 2px;
-    background: var(--gold);
-    transition: 0.3s;
-}
-.menu-icon.active span:nth-child(1) { transform: translateY(10px) rotate(45deg); }
-.menu-icon.active span:nth-child(2) { opacity: 0; }
-.menu-icon.active span:nth-child(3) { transform: translateY(-10px) rotate(-45deg); }
+.line { height: 2px; background: var(--neon-blue); width: 100%; transition: 0.3s; box-shadow: 0 0 5px var(--neon-blue); }
+.menu-trigger.active .line:nth-child(1) { transform: rotate(45deg) translate(10px, 10px); }
+.menu-trigger.active .line:nth-child(2) { opacity: 0; }
+.menu-trigger.active .line:nth-child(3) { transform: rotate(-45deg) translate(6px, -7px); }
 
-.menu {
-    position: absolute;
-    top: 60px;
+/* Overlay do Menu */
+.menu-overlay {
+    position: fixed;
+    top: 0;
     right: 0;
-    width: 300px;
-    height: calc(100vh - 60px); /* Ocupa resto da tela */
-    background: rgba(11, 16, 21, 0.95);
-    backdrop-filter: blur(15px);
-    border-left: 1px solid var(--glass-border);
+    height: 100vh;
+    width: 320px;
+
+    background: rgba(5, 5, 10, 0.95);
+    border-left: 1px solid var(--neon-blue);
+
     transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: block; /* Override do original display:none */
-}
-.menu.active { transform: translateX(0); }
+    transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 
-.menu ul {
-    list-style: none;
-    padding: 20px;
+    z-index: 999; /* acima do header */
+    padding: 90px 20px 20px 20px; /* espaço para não colidir com o header */
+    
     overflow-y: auto;
-    height: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: var(--neon-blue) rgba(255,255,255,0.05);
 }
+.menu-overlay.active { transform: translateX(0); }
+.menu-content ul { list-style: none; padding: 0; }
 .menu-item {
-    display: block;
-    padding: 15px;
-    color: var(--gold);
-    text-decoration: none;
+    display: block; padding: 15px;
+    color: var(--neon-blue); text-decoration: none;
     border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 0.9rem;
-    transition: 0.3s;
+    font-size: 1.1em; transition: 0.3s;
 }
-.menu-item:hover { background: rgba(212, 177, 146, 0.1); padding-left: 20px; }
+.menu-item:hover { padding-left: 25px; background: rgba(0, 243, 255, 0.1); }
 
-/* ================= MAIN LAYOUT ================= */
+/* ============ MAIN STAGE ============ */
 main {
-    flex: 1; /* Ocupa todo o espaço restante */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* HUD, Jogo, Console */
     padding: 20px;
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-    width: 100%;
+    gap: 20px;
 }
 
-/* 1. Painel de Controle */
-.control-panel {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--glass-bg);
+/* Top HUD */
+.top-hud {
+    display: flex; justify-content: space-between; align-items: center;
+    border: 1px solid var(--border);
     padding: 10px 20px;
-    border-radius: 50px;
-    border: 1px solid var(--glass-border);
-    margin-bottom: 10px;
+    background: var(--glass);
+    border-radius: 5px;
 }
-.selector-group { display: flex; flex-direction: column; }
-.selector-group label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.7; margin-bottom: 2px;}
-
+.selector-container label { font-size: 0.7em; color: #888; display: block; margin-bottom: 3px; }
 select {
-    background: transparent;
-    border: none;
-    color: var(--gold);
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    outline: none;
+    background: transparent; border: none; color: var(--neon-blue);
+    font-family: 'Orbitron'; font-size: 1em; outline: none; cursor: pointer;
+}
+.pulse {
+    display: inline-block; width: 8px; height: 8px;
+    background: #0f0; border-radius: 50%;
+    box-shadow: 0 0 5px #0f0;
+    animation: blink 2s infinite; margin-right: 5px;
+}
+
+/* Game Stage (Cartas) */
+.game-stage {
+    position: relative;
+    display: flex; justify-content: center; align-items: center;
+}
+.instruction-overlay {
+    position: absolute; bottom: 10%;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Orbitron'; letter-spacing: 3px;
+    font-size: 0.8em; pointer-events: none;
+    animation: fadePulse 3s infinite;
+}
+
+.cards-grid {
+    display: flex; gap: 30px;
+    perspective: 1200px;
+}
+
+/* A CARTA (O Núcleo da Interação) */
+.card-slot {
+    width: 160px; height: 240px;
+    position: relative;
+    transform-style: preserve-3d;
     cursor: pointer;
 }
-.btn-reset {
-    background: transparent;
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    padding: 5px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.7rem;
-    text-transform: uppercase;
+
+.card-inner {
+    width: 100%; height: 100%;
+    background: rgba(10, 15, 20, 0.8);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.1s; /* Rápido para responder ao shake */
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+/* Estado de Carregamento (Barra de Progresso) */
+.charge-bar {
+    position: absolute; bottom: 0; left: 0;
+    height: 4px; width: 0%;
+    background: var(--neon-gold);
+    box-shadow: 0 0 10px var(--neon-gold);
+    transition: width 0.1s linear;
+}
+
+/* Símbolo central */
+.glyph {
+    font-size: 3em; color: var(--border);
     transition: 0.3s;
 }
-.btn-reset:hover { background: var(--gold); color: var(--dark-blue); }
 
-/* 2. Campo Quântico (Cartas) */
-.quantum-field {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    perspective: 1000px;
-    padding: 20px 0;
+/* Interação: Hover/Active */
+.card-slot:hover .card-inner { border-color: var(--neon-blue); box-shadow: 0 0 20px var(--border); }
+.card-slot:active .card-inner { transform: scale(0.98); }
+.card-slot.charging .card-inner {
+    animation: shake 0.5s infinite;
+    border-color: var(--neon-gold);
 }
-
-.carta {
-    width: 130px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    position: relative;
-    backdrop-filter: blur(4px);
-}
-
-/* Estado Inicial: Pulsação */
-.carta:not(.revelada) {
-    animation: pulseBorder 3s infinite;
-}
-.carta:not(.revelada):hover {
-    transform: translateY(-10px);
-    border-color: var(--gold);
-    box-shadow: 0 0 15px var(--neon-glow);
-}
-.carta-simbolo { font-size: 2rem; opacity: 0.5; transition: 0.3s; }
-.carta:hover .carta-simbolo { opacity: 1; text-shadow: 0 0 10px var(--gold); }
+.card-slot.charging .glyph { color: var(--neon-gold); text-shadow: 0 0 15px var(--neon-gold); }
 
 /* Estado Revelado */
-.carta.revelada {
-    background: linear-gradient(135deg, var(--dark-blue), #1a252f);
-    border: 1px solid var(--gold);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transform: rotateY(0);
-    cursor: default;
+.card-slot.revealed .card-inner {
+    background: linear-gradient(135deg, #1a1a2e, #000);
+    border: 1px solid var(--neon-blue);
+    animation: revealPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.carta.revelada h3 {
-    font-family: 'Cinzel', serif;
-    color: var(--gold);
-    font-size: 1.1rem;
-    text-align: center;
+.card-title {
+    font-family: 'Cinzel', serif; color: var(--neon-blue);
+    font-size: 1.2em; text-align: center;
+    text-shadow: 0 0 5px var(--neon-blue);
 }
 
-/* 3. HUD de Dados */
-.data-hud {
-    height: 35vh; /* Ocupa 35% da altura da tela */
-    background: rgba(15, 20, 25, 0.9);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* Bottom Console */
+.bottom-console {
+    height: 180px;
+    background: rgba(0,0,0,0.9);
+    border-top: 2px solid var(--neon-blue);
+    display: flex; flex-direction: column;
 }
-.hud-header {
-    padding: 10px 15px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    background: rgba(0,0,0,0.2);
+.console-header {
+    padding: 5px 15px; background: rgba(0, 243, 255, 0.1);
+    font-size: 0.8em; letter-spacing: 2px;
+    display: flex; justify-content: space-between; align-items: center;
 }
-.status-blink { color: #00ff88; animation: blink 2s infinite; }
-.hud-content {
-    padding: 20px;
-    overflow-y: auto; /* Scroll apenas aqui dentro */
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: #e0e0e0;
+.btn-synth {
+    background: var(--neon-blue); border: none; padding: 5px 15px;
+    font-family: 'Orbitron'; font-weight: bold; cursor: pointer;
+    clip-path: polygon(10% 0, 100% 0, 100% 80%, 90% 100%, 0 100%, 0 20%);
 }
-.hud-content::-webkit-scrollbar { width: 4px; }
-.hud-content::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 4px; }
+.btn-synth:hover { background: white; box-shadow: 0 0 15px white; }
+.hidden { display: none; }
 
-/* Animações */
+.console-log {
+    flex: 1; padding: 15px; overflow-y: auto;
+    font-family: 'Courier New', monospace; font-size: 0.9em;
+    color: #ccc;
+}
+.log-line { margin: 5px 0; border-left: 2px solid #555; padding-left: 10px; opacity: 0; animation: fadeIn 0.3s forwards; }
+.log-line strong { color: var(--neon-gold); }
+
+/* Animations */
+@keyframes scan { 0% { top: -10%; } 100% { top: 110%; } }
 @keyframes blink { 50% { opacity: 0.3; } }
-@keyframes pulseBorder { 0%, 100% { border-color: rgba(255,255,255,0.1); } 50% { border-color: rgba(212, 177, 146, 0.4); } }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 25% { transform: translate(-1px, -2px) rotate(-1deg); } 75% { transform: translate(-3px, 0px) rotate(1deg); } 100% { transform: translate(1px, -1px) rotate(0deg); } }
+@keyframes revealPop { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes fadePulse { 50% { opacity: 0.7; } }
 
-.msg-entry {
-    animation: fadeIn 0.6s ease forwards;
-    margin-bottom: 20px;
-    border-left: 2px solid var(--gold);
-    padding-left: 15px;
-}
-.msg-title { color: var(--gold); font-family: 'Cinzel', serif; font-size: 1.1rem; display: block; margin-bottom: 5px; }
-
-/* Responsivo Mobile */
 @media (max-width: 600px) {
-    .cartas-container { gap: 10px; }
-    .carta { width: 30%; height: 160px; }
-    .data-hud { height: 40vh; }
-    .control-panel { flex-direction: column; gap: 10px; align-items: stretch; text-align: center; }
+    .cards-grid { gap: 10px; }
+    .card-slot { width: 100px; height: 160px; }
+    .glyph { font-size: 2em; }
 }
